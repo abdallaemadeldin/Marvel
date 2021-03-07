@@ -1,4 +1,4 @@
-import { StyleSheet, useWindowDimensions, Image, Platform } from 'react-native';
+import { StyleSheet, useWindowDimensions, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default () => {

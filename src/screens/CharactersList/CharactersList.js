@@ -7,12 +7,12 @@ import style from './style';
 
 const CharactersList = () => {
     const { container, toolbar, logo, searchIcon, searchButton, searchCard, contentContainerStyle, indicator, heroCard, cover, footerView, cardTitle, modalBlur, modalHeader, inputHolder, searchInputIcon, closeSearchBtn, cancelLabel, input, searchCardLabel, searchCardCover } = style();
-    const { loading, list, loadMore, searchLoading, isRefreshing, showSearch, keyward, searchList, setKeyward, search, setShowSearch, onRefresh, onEnd } = useCharactersList();
+    const { loading, list, loadMore, searchLoading, isRefreshing, showSearch, keyward, searchList, toDetails, setKeyward, search, setShowSearch, onRefresh, onEnd } = useCharactersList();
 
     const renderItem = ({ item }) => {
         return (
-            <TouchableOpacity activeOpacity={.8} style={heroCard}>
-                <Image source={{ uri: `${item?.thumbnail?.path}/landscape_xlarge.${item?.thumbnail?.extension}` || "https://insomniac.games/wp-content/uploads/2018/09/Spider-Man_PS4_Selfie_Photo_Mode_LEGAL.jpg" }} style={cover} />
+            <TouchableOpacity activeOpacity={.8} style={heroCard} onPress={() => toDetails(item)}>
+                <Image source={{ uri: `${item?.thumbnail?.path}/landscape_xlarge.${item?.thumbnail?.extension}` }} defaultSource={require('src/assets/default.png')} style={cover} />
                 <BlurView
                     style={footerView}
                     blurType="dark"
@@ -27,8 +27,8 @@ const CharactersList = () => {
 
     const renderSearch = ({ item }) => {
         return (
-            <TouchableOpacity activeOpacity={.8} style={searchCard}>
-                <Image source={{ uri: `${item?.thumbnail?.path}/landscape_small.${item?.thumbnail?.extension}` || "https://insomniac.games/wp-content/uploads/2018/09/Spider-Man_PS4_Selfie_Photo_Mode_LEGAL.jpg" }} style={searchCardCover} />
+            <TouchableOpacity activeOpacity={.8} style={searchCard} onPress={() => toDetails(item)}>
+                <Image source={{ uri: `${item?.thumbnail?.path}/landscape_small.${item?.thumbnail?.extension}` }} defaultSource={require('src/assets/default.png')} style={searchCardCover} />
                 <Highlighter
                     style={searchCardLabel}
                     highlightStyle={{ backgroundColor: 'red' }}
