@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import Splash from 'src/screens/Splash/Splash';
+import CharactersList from 'src/screens/CharactersList/CharactersList';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +15,8 @@ export default WindowStack = () => {
                     cardOverlayEnabled: true,
                     cardShadowEnabled: true
                 }}>
-                    <Stack.Screen name="Splash" component={Splash} options={{ cardStyleInterpolator: CardStyleInterpolators.forNoAnimation }} />
+                    <Stack.Screen name="Splash" component={Splash} />
+                    <Stack.Screen name="CharactersList" component={CharactersList} />
                 </Stack.Navigator>
             </NavigationContainer>
         </>
