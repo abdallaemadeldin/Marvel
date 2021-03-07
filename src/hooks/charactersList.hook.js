@@ -66,5 +66,10 @@ export const useCharactersList = () => {
         }
     }
 
-    return { loading, list, loadMore, searchLoading, isRefreshing, showSearch, searchList, keyward, setKeyward, search, setShowSearch, onRefresh, onEnd };
+    const toDetails = (item) => {
+        setShowSearch(false);
+        navigate("CharacterDetails", { item });
+    }
+
+    return { loading, list, loadMore, searchLoading, isRefreshing, showSearch, searchList, keyward, toDetails, setKeyward, search, setShowSearch, onRefresh, onEnd };
 }
