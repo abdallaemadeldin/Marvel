@@ -1,12 +1,13 @@
 import React, { memo } from 'react';
-import { View, Image, TouchableOpacity, FlatList, Text, ActivityIndicator, RefreshControl, Modal } from 'react-native';
+import { View, Image, TouchableOpacity, FlatList, Text, TextInput, ActivityIndicator, RefreshControl, Modal } from 'react-native';
 import { BlurView } from "@react-native-community/blur";
+import Highlighter from 'react-native-highlight-words';
 import { useCharactersList } from 'src/hooks';
 import style from './style';
 
 const CharactersList = () => {
-    const { container, toolbar, logo, searchIcon, searchButton, contentContainerStyle, indicator, heroCard, cover, footerView, cardTitle } = style();
-    const { loading, list, loadMore, isRefreshing, onRefresh, onEnd } = useCharactersList();
+    const { container, toolbar, logo, searchIcon, searchButton, searchCard, contentContainerStyle, indicator, heroCard, cover, footerView, cardTitle, modalBlur, modalHeader, inputHolder, searchInputIcon, closeSearchBtn, cancelLabel, input, searchCardLabel, searchCardCover } = style();
+    const { loading, list, loadMore, searchLoading, isRefreshing, showSearch, keyward, searchList, setKeyward, search, setShowSearch, onRefresh, onEnd } = useCharactersList();
 
     const renderItem = ({ item }) => {
         return (
@@ -24,6 +25,20 @@ const CharactersList = () => {
         );
     }
 
+    const renderSearch = ({ item }) => {
+        return (
+            <TouchableOpacity activeOpacity={.8} style={searchCard}>
+                <Image source={{ uri: `${item?.thumbnail?.path}/landscape_small.${item?.thumbnail?.extension}` || "https://insomniac.games/wp-content/uploads/2018/09/Spider-Man_PS4_Selfie_Photo_Mode_LEGAL.jpg" }} style={searchCardCover} />
+                <Highlighter
+                    style={searchCardLabel}
+                    highlightStyle={{ backgroundColor: 'red' }}
+                    searchWords={[keyward]}
+                    textToHighlight={item.name}
+                />
+            </TouchableOpacity>
+        );
+    }
+
     const renderFooter = () => {
         return (
             <ActivityIndicator color="red" style={{ marginVertical: '4%' }} />
@@ -34,7 +49,7 @@ const CharactersList = () => {
         <View style={container}>
             <View style={toolbar}>
                 <Image source={require('src/assets/logo.png')} style={logo} />
-                <TouchableOpacity activeOpacity={.8} style={searchButton}>
+                <TouchableOpacity activeOpacity={.8} style={searchButton} onPress={() => setShowSearch(true)}>
                     <Image source={require('src/assets/magnify.png')} style={searchIcon} />
                 </TouchableOpacity>
             </View>
@@ -50,6 +65,48 @@ const CharactersList = () => {
                 onEndReached={onEnd}
                 refreshControl={<RefreshControl colors={["red", "#fff"]} tintColor="red" refreshing={isRefreshing} onRefresh={onRefresh} />}
             />}
+
+            <Modal visible={showSearch} animationType="fade" transparent>
+                <BlurView
+                    style={modalBlur}
+                    blurType="dark"
+                    blurAmount={1}
+                    reducedTransparencyFallbackColor="white"
+                >
+                    <View style={modalHeader}>
+                        <View style={inputHolder}>
+                            <Image source={require('src/assets/magnify.png')} style={searchInputIcon} />
+                            <TextInput
+                                onChangeText={setKeyward}
+                                placeholder="Search for a character..."
+                                style={input}
+                                value={keyward}
+                                onSubmitEditing={search}
+                                returnKeyType="search"
+                                onBlur={search}
+                            />
+                        </View>
+                        <TouchableOpacity style={closeSearchBtn} onPress={() => setShowSearch(false)}>
+                            <Text style={cancelLabel}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {
+                        searchLoading
+                            ?
+                            <ActivityIndicator color="red" style={indicator} />
+                            :
+                            <FlatList
+                                data={searchList}
+                                renderItem={renderSearch}
+                                keyExtractor={(e, i) => i.toString()}
+                                showsVerticalScrollIndicator={false}
+                                style={{ width: '100%' }}
+                                contentContainerStyle={contentContainerStyle}
+                            />
+                    }
+                </BlurView>
+            </Modal>
         </View>
     );
 }

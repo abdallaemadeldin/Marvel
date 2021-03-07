@@ -75,6 +75,79 @@ export default () => {
         },
         indicator: {
             marginTop: '30%'
+        },
+        modalBlur: {
+            flex: 1,
+            alignItems: 'center',
+            paddingTop: top + 20
+        },
+        modalHeader: {
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginHorizontal: '2%'
+        },
+        inputHolder: {
+            flex: 1,
+            height: 50,
+            backgroundColor: '#222',
+            borderRadius: 10,
+            elevation: 10,
+            shadowColor: '#000',
+            shadowRadius: 6,
+            shadowOffset: {
+                width: 1,
+                height: 1
+            },
+            shadowOpacity: .6,
+            alignItems: 'center',
+            flexDirection: 'row'
+        },
+        searchInputIcon: {
+            tintColor: "#fff",
+            width: 20,
+            height: 20,
+            marginHorizontal: '4%'
+        },
+        closeSearchBtn: {
+            flex: .2,
+            height: 44,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginHorizontal: '4%'
+        },
+        cancelLabel: {
+            color: '#eb344c',
+            fontWeight: 'bold',
+            fontSize: 16
+        },
+        input: {
+            flex: 1,
+            color: '#fff',
+            fontWeight: '500'
+        },
+        searchCard: {
+            width: '90%',
+            height: 100,
+            alignSelf: 'center',
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: '#222',
+            marginVertical: '1%',
+            borderRadius: 10,
+            overflow: 'hidden'
+        },
+        searchCardCover: {
+            width: 100,
+            height: 100,
+            marginEnd: '6%'
+        },
+        searchCardLabel: {
+            fontSize: 18,
+            color: '#fff',
+            fontWeight: 'bold',
+            flex: 1,
+            marginEnd: '2%'
         }
     });
 }

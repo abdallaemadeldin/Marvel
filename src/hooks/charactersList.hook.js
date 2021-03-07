@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/core';
-import { getList } from 'src/models/charactersList.model';
+import { getList, searchByName } from 'src/models/charactersList.model';
 
 export const useCharactersList = () => {
     const { navigate } = useNavigation();
@@ -10,10 +10,14 @@ export const useCharactersList = () => {
     const [loadMore, setLoadMore] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
-    useEffect(() => {
-        setLoading(true);
-        fetch(offset);
-    }, []);
+    // Search    
+    const [showSearch, setShowSearch] = useState(false);
+    const [searchLoading, setSearchLoading] = useState(false);
+    const [searchList, setSearchList] = useState([]);
+    const [keyward, setKeyward] = useState('');
+
+    useEffect(() => { fetch(offset); }, []);
+    useEffect(() => { if (!showSearch) { setSearchList([]); setKeyward(''); } }, [showSearch]);
 
     const onEnd = () => {
         setLoadMore(true);
@@ -45,5 +49,22 @@ export const useCharactersList = () => {
         })
     }
 
-    return { loading, list, loadMore, isRefreshing, onRefresh, onEnd };
+    const search = () => {
+        if (keyward) {
+            setSearchLoading(true);
+            searchByName(keyward, {
+                success: response => {
+                    setSearchList(response.data.results);
+                    setSearchLoading(false);
+                },
+                error: error => {
+                    __DEV__ && console.warn(error);
+                    setSearchLoading(false);
+                }
+
+            })
+        }
+    }
+
+    return { loading, list, loadMore, searchLoading, isRefreshing, showSearch, searchList, keyward, setKeyward, search, setShowSearch, onRefresh, onEnd };
 }
