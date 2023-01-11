@@ -28,8 +28,6 @@ jobs:
       with:
         node-version: '16'
         cache: 'yarn'
-    - name: Determine the build number
-      run: "node ./.github/utils/determineBuildNumber.js ${{ github.run_number }} ${{ github.event.inputs.environment }}"
     - name: Install dependencies
       run: |
         sudo apt-get install -y ruby-bundler
