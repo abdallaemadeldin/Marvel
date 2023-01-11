@@ -1,0 +1,54 @@
+name: Deploy-Android-TEST 
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        required: true
+        default: staging
+
+env:
+  APP_CENTER_TOKEN: ${{ secrets.APP_CENTER_TOKEN_MYAPP_ANDROID  }}  
+  APP_NAME: ${{ 'Arya-social-android-staging/Testers'  }}  
+  TESTING_GROUP: ${{  'Testers'  }} 
+  UPLOAD_FILE: ${{ 'android/app/build/outputs/apk/app-release.apk'  }}  
+  
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Extract secrets
+      env:
+        CI_SECRETS_ZIP: ${{secrets.CI_SECRETS_ZIP}}
+      run: |
+        echo $CI_SECRETS_ZIP | base64 -d > secrets.zip
+        unzip secrets.zip
+    - name: Switch to Node v16
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+        cache: 'yarn'
+    - name: Determine the build number
+      run: "node ./.github/utils/determineBuildNumber.js ${{ github.run_number }} ${{ github.event.inputs.environment }}"
+    - name: Install dependencies
+      run: |
+        sudo apt-get install -y ruby-bundler
+        sudo bundle install
+        yarn
+    - name: Switch to the selected environment
+      run: "bundle exec fastlane switch env:${{ github.event.inputs.environment }}"
+    - name: Make a production build and send it to the play store
+      run: "bundle exec fastlane android build_number:$BUILD_NUMBER"
+    - name: Upload to App Center
+      uses: wzieba/AppCenter-Github-Action@v1
+      with:
+        appName: ${{ env.APP_NAME }}
+        token: ${{ env.APP_CENTER_TOKEN }}
+        group: ${{ env.TESTING_GROUP }}
+        file: ${{ env.UPLOAD_FILE }}
+        notifyTesters: true
+        debug: false
