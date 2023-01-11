@@ -29,14 +29,11 @@ jobs:
         node-version: '16'
         cache: 'yarn'
     - name: Install dependencies
-      run: |
-        sudo apt-get install -y ruby-bundler
-        sudo bundle install
-        yarn
-    - name: Switch to the selected environment
-      run: "bundle exec fastlane switch env:${{ github.event.inputs.environment }}"
-    - name: Make a production build and send it to the play store
-      run: "bundle exec fastlane android build_number:$BUILD_NUMBER"
+      run: yarn
+      
+    - name: Build android
+      run:  cd android && ./gradlew assembleRelease
+    
     - name: Upload to App Center
       uses: wzieba/AppCenter-Github-Action@v1
       with:
